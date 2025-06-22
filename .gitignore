@@ -2,5 +2,7 @@
 *.swp
 *.tmp
 test-apps/
+test-smart/
+test-*/
 .build/
 .swiftpm/
