@@ -8,7 +8,7 @@ echo "Installing AppMaker..."
 mkdir -p ~/.local/bin
 
 # Download the appmaker script
-curl -fsSL https://raw.githubusercontent.com/joelklabo/appmaker/main/appmaker-ultimate -o ~/.local/bin/appmaker
+curl -fsSL https://raw.githubusercontent.com/joelklabo/appmaker/main/appmaker -o ~/.local/bin/appmaker
 chmod +x ~/.local/bin/appmaker
 
 # Add to PATH if needed

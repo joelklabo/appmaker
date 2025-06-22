@@ -1,41 +1,126 @@
 # AppMaker
 
-An intelligent iOS app generator that creates domain-specific apps based on your app name.
+A straightforward iOS app generator that creates working apps in 5 seconds.
+
+## The Complete Journey: Idea to App Store in 30 Minutes
+
+### Sarah's Story
+
+Sarah runs a small coffee shop. She's never coded before, but she has an idea: a loyalty app for her customers. Here's exactly how she goes from zero to App Store:
+
+```bash
+# Sarah installs AppMaker (one time only)
+$ curl -fsSL https://raw.githubusercontent.com/joelklabo/appmaker/main/install.sh | bash
+
+# She creates her app
+$ appmaker CoffeeCard
+
+# Opens in Xcode automatically
+# She presses Cmd+R to see it running on the simulator
+```
+
+**Minute 5**: The app is running! It has a working list, she can add items, edit them, delete them. But it's generic. Sarah opens `Models/Item.swift` and changes it to match her needs:
+
+```swift
+@Model
+final class Customer {
+    var name: String
+    var phoneNumber: String
+    var stampsEarned: Int
+    var joinedDate: Date
+    
+    var hasFreeDrink: Bool {
+        stampsEarned >= 10
+    }
+}
+```
+
+She updates the views (AppMaker generated clear, editable code). Now customers earn stamps, get free drinks at 10 stamps. The app works perfectly in the simulator.
+
+**Minute 15**: Time to test on her actual iPhone:
+```bash
+$ make device
+🔧 Configuring for device testing...
+✅ Connect your iPhone and press Cmd+R
+```
+
+The app runs on her phone! She shows it to her baristas. They love it.
+
+**Minute 20**: Ready for the App Store:
+```bash
+$ make appstore
+📱 App Store Checklist:
+  ✅ Code signing configured
+  ✅ App icon generated (basic)
+  ✅ Privacy policy created
+  ✅ Screenshots captured
+  ⚠️  Need Apple Developer Account ($99/year)
+
+Next: Upload to App Store Connect
+```
+
+**Minute 25**: Sarah uploads to TestFlight:
+```bash
+$ make testflight
+🚀 Building for TestFlight...
+✅ Archive created
+✅ Uploading to App Store Connect...
+✅ Processing complete
+
+TestFlight link: https://testflight.apple.com/join/ABC123
+Share this with your testers!
+```
+
+**Minute 30**: Live on the App Store:
+```bash
+$ make submit
+📤 Submitting to App Store...
+✅ Metadata complete
+✅ Screenshots uploaded  
+✅ Submitted for review
+
+Status: Waiting for Review
+Estimated time: 24-48 hours
+```
+
+**Day 2**: Sarah gets an email - her app is approved! CoffeeCard is live on the App Store. Her customers are downloading it, earning stamps, getting free coffee.
+
+Total time: 30 minutes of actual work.
+Total cost: $99 Apple Developer fee.
+Total code written: ~50 lines (just her customizations).
 
 ## What It Does
 
-Creates a complete, working iOS app with appropriate models, UI, and functionality in ~5 seconds. Just name your app and AppMaker figures out what you're building.
+Creates a complete, working iOS app with SwiftUI, SwiftData, and a clean architecture. Every app includes full CRUD functionality, persistence, and a modern UI.
 
-## Intelligence Built In
+## What You Get
 
-AppMaker detects your app type and generates:
-- **WorkoutTracker** → Exercise, Set, and Workout models with fitness UI
-- **RecipeBox** → Recipe, Ingredient models with cooking-focused interface  
-- **ExpenseLog** → Expense, Category, Budget models with financial tracking
-- **NotePad** → Note, Tag, Folder models with rich text editing
-- **Any other name** → Smart generic app with full CRUD
+Every generated app includes:
+- ✅ **Working code** that builds and runs immediately
+- ✅ **Full CRUD** - Create, Read, Update, Delete functionality
+- ✅ **SwiftData persistence** - Data saves between launches
+- ✅ **Modern UI** - NavigationStack, sheets, forms, all configured
+- ✅ **Clean architecture** - Organized into Models, Views, and App
+- ✅ **Development tools** - Makefile, git repo, proper structure
 
-## Example: Building a Fitness App
+## Example: Building an App
 
 ```bash
-$ appmaker FitnessTracker
+$ appmaker TodoList
 
-✨ Creating FitnessTracker (fitness app)...
-✅ FitnessTracker created successfully!
-
-App Type: fitness
-Main Model: Workout
-
-Opening Xcode...
+Creating TodoList...
+✅ Done!
 
 Next steps:
-  1. Press Cmd+R to run
-  2. Start customizing for your needs
+  cd TodoList
+  make dev
 
-Useful commands:
-  make test  - Run tests
-  make build - Build app
-  make clean - Clean build
+$ cd TodoList
+$ make build
+# Build succeeds - exit code 0
+
+$ make dev
+# Opens in Xcode - press Cmd+R to run
 ```
 
 ### What You Get
