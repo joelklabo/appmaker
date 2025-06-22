@@ -108,6 +108,7 @@ options:
     macOS: "15.0"
 settings:
   DEVELOPMENT_TEAM: ""
+  ENABLE_USER_SCRIPT_SANDBOXING: NO
 packages:
   $APP_NAME:
     path: Packages/$APP_NAME
@@ -118,6 +119,9 @@ targets:
     sources: [$APP_NAME]
     resources:
       - $APP_NAME/Resources
+    settings:
+      INFOPLIST_FILE: $APP_NAME/Info.plist
+      CODE_SIGN_ENTITLEMENTS: $APP_NAME/$APP_NAME.entitlements
     dependencies:
       - package: $APP_NAME
 EOF
@@ -146,14 +150,28 @@ EOF
 # Create main app file
 cat > "$APP_NAME/${APP_NAME}App.swift" << EOF
 import SwiftUI
+import SwiftData
 import $APP_NAME
+import Models
+import Store
 
 @main
 struct ${APP_NAME}App: App {
+    let container: ModelContainer
+    
+    init() {
+        do {
+            container = try createModelContainer()
+        } catch {
+            fatalError("Failed to create ModelContainer: \\(error)")
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(container)
     }
 }
 EOF
@@ -161,25 +179,45 @@ EOF
 # Create ContentView
 cat > "$APP_NAME/Views/ContentView.swift" << EOF
 import SwiftUI
+import SwiftData
+import Models
 
 struct ContentView: View {
+    @Query private var items: [Item]
+    @Environment(\.modelContext) private var context
+    
     var body: some View {
-        VStack {
-            Image(systemName: "sparkles")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Welcome to $APP_NAME!")
-                .font(.title)
-            Text("Built with AppMaker")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+        NavigationStack {
+            List {
+                ForEach(items) { item in
+                    HStack {
+                        Text(item.name)
+                        Spacer()
+                        Text(item.createdAt, style: .time)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .onDelete { indexes in
+                    for index in indexes {
+                        context.delete(items[index])
+                    }
+                }
+            }
+            .navigationTitle("$APP_NAME")
+            .toolbar {
+                Button("Add Item") {
+                    let item = Item(name: "Item #\\(items.count + 1)")
+                    context.insert(item)
+                }
+            }
         }
-        .padding()
     }
 }
 
 #Preview {
     ContentView()
+        .modelContainer(for: Item.self, inMemory: true)
 }
 EOF
 
@@ -199,6 +237,8 @@ public final class Item {
         self.createdAt = Date()
     }
 }
+
+extension Item: Identifiable {}
 EOF
 
 # Create a service
@@ -216,22 +256,12 @@ public actor ItemService {
 EOF
 
 # Create store
-cat > "Packages/$APP_NAME/Sources/Store/DataStore.swift" << EOF
+cat > "Packages/$APP_NAME/Sources/Store/Store.swift" << EOF
 import SwiftData
 import Models
 
-public actor DataStore {
-    public static let shared = DataStore()
-    
-    private init() {}
-    
-    public lazy var container: ModelContainer = {
-        do {
-            return try ModelContainer(for: Item.self)
-        } catch {
-            fatalError("Failed to create ModelContainer: \\(error)")
-        }
-    }()
+public func createModelContainer() throws -> ModelContainer {
+    try ModelContainer(for: Item.self)
 }
 EOF
 
@@ -316,6 +346,20 @@ Packages/$APP_NAME/  # Business Logic
 - SwiftData for persistence
 - No ViewModels (MV pattern)
 - Dependency injection via environment
+EOF
+
+# Create entitlements
+cat > "$APP_NAME/$APP_NAME.entitlements" << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+</dict>
+</plist>
 EOF
 
 # Create .swiftlint.yml
