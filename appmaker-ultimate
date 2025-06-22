@@ -44,6 +44,7 @@ mkdir -p "$APP_NAME/$APP_NAME"/{Views,Models,Services,Resources}
 mkdir -p "$APP_NAME/$APP_NAME/Resources"/{Assets.xcassets,Preview\ Content}
 mkdir -p "$APP_NAME/Packages/$APP_NAME"/{Sources,Tests}
 mkdir -p "$APP_NAME/Packages/$APP_NAME/Sources"/{$APP_NAME,Models,Services,Store}
+mkdir -p "$APP_NAME/Packages/$APP_NAME/Tests/${APP_NAME}Tests"
 
 cd "$APP_NAME"
 
