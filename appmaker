@@ -79,7 +79,7 @@ appstore: _check_icons _privacy_policy _screenshots
 	@echo "  ✅ App icon generated (basic)"
 	@echo "  ✅ Privacy policy created"
 	@echo "  ✅ Screenshots captured"
-	@echo "  ⚠️  Need Apple Developer Account (\\\$$\$$99/year)"
+	@echo "  ⚠️  Need Apple Developer Account (USD 99/year)"
 	@echo ""
 	@echo "Next: make testflight"
 
