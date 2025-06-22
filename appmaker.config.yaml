@@ -1,0 +1,70 @@
+# AppMaker Configuration Template
+# This file defines your app's structure and features
+
+app:
+  name: "${APP_NAME}"
+  bundle_id_prefix: "${BUNDLE_ID_PREFIX}"
+  organization: "${ORGANIZATION}"
+  author: "${AUTHOR}"
+  
+platforms:
+  - ios: 
+      min_version: "18.0"
+      devices: ["iphone", "ipad"]
+  - macos:
+      min_version: "15.0"
+      
+features:
+  # Core Features
+  swiftdata: true
+  cloudkit: true
+  ai_integration: false
+  widgets: false
+  
+  # Architecture
+  architecture: "mv" # mv (Model-View) or mvvm
+  reactive_system: true # Custom reactive bindings
+  
+  # Testing
+  testing_framework: "swift-testing" # swift-testing or xctest
+  ui_tests: true
+  
+  # Build System
+  xcodegen: true
+  makefile: true
+  ci_scripts: true
+  
+  # Documentation
+  claude_md: true
+  readme_template: "comprehensive" # basic, comprehensive
+  
+  # Code Quality
+  swiftlint: true
+  swiftformat: true
+  pre_commit_hooks: true
+
+modules:
+  # Define your app's module structure
+  - name: "${APP_NAME}Kit"
+    type: "package"
+    submodules:
+      - Foundation  # Core models
+      - Store       # Persistence
+      - Services    # Business logic
+      - Reactive    # UI bindings
+      
+ui:
+  navigation: "navigationstack" # navigationstack, sidebar
+  design_system: true
+  accessibility: true
+  
+deployment:
+  app_store: true
+  testflight: true
+  notarization: true # macOS only
+  
+templates:
+  # Which templates to use
+  use_vice_style: false # ViceChips style (chips, budgets)
+  use_prompt_style: false # Prompt style (CRUD, categories)
+  custom_models: [] # Your custom model definitions
