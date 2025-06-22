@@ -178,6 +178,26 @@ struct ContentView: View {
 4. **Build**: `make build`
 5. **Ship it**: You have a working notes app
 
+## Live Demo
+
+```bash
+$ appmaker TodoApp
+✨ Creating TodoApp...
+✅ TodoApp created successfully!
+
+Opening Xcode...
+
+$ cd TodoApp
+$ make test
+🧪 Running tests...
+Test Suite 'All tests' passed.
+Executed 1 test, with 0 failures.
+
+$ make build
+🔨 Building TodoApp...
+** BUILD SUCCEEDED **
+```
+
 ## Installation
 
 ```bash
