@@ -11,6 +11,20 @@ if [ -z "$APP_NAME" ] || [ -d "$APP_NAME" ]; then
     exit 1
 fi
 
+# Validate app name - no spaces or special characters
+if [[ ! "$APP_NAME" =~ ^[a-zA-Z][a-zA-Z0-9]*$ ]]; then
+    echo "Error: App name must start with a letter and contain only letters and numbers (no spaces)"
+    echo "Example: appmaker TodoList"
+    exit 1
+fi
+
+# Check for required tools
+if ! command -v xcodegen &> /dev/null; then
+    echo "Error: xcodegen is required but not installed."
+    echo "Install with: brew install xcodegen"
+    exit 1
+fi
+
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -34,16 +48,18 @@ EOF
 
 # Enhanced Makefile with App Store workflow
 cat > Makefile << EOF
+APP_NAME := $APP_NAME
+
 .PHONY: dev test build clean device appstore testflight submit help
 
 dev:
 	@xcodegen && open $APP_NAME.xcodeproj
 
 test:
-	@xcodebuild test -scheme $APP_NAME -destination 'platform=iOS Simulator,OS=18.0,name=iPhone 16' -quiet
+	@xcodebuild test -scheme $APP_NAME -destination 'platform=iOS Simulator,name=iPhone 15' -quiet
 
 build:
-	@xcodebuild build -scheme $APP_NAME -destination 'platform=iOS Simulator,OS=18.0,name=iPhone 16' -quiet
+	@xcodebuild build -scheme $APP_NAME -destination 'platform=iOS Simulator,name=iPhone 15' -quiet
 
 device:
 	@echo "🔧 Configuring for device testing..."
@@ -63,13 +79,13 @@ appstore: _check_icons _privacy_policy _screenshots
 	@echo "  ✅ App icon generated (basic)"
 	@echo "  ✅ Privacy policy created"
 	@echo "  ✅ Screenshots captured"
-	@echo "  ⚠️  Need Apple Developer Account (\$$99/year)"
+	@echo "  ⚠️  Need Apple Developer Account (\\\$$\$$99/year)"
 	@echo ""
 	@echo "Next: make testflight"
 
 testflight: _archive
 	@echo "🚀 Building for TestFlight..."
-	@echo "✅ Archive created at build/$(APP_NAME).xcarchive"
+	@echo "✅ Archive created at build/\$(APP_NAME).xcarchive"
 	@echo ""
 	@echo "Next steps:"
 	@echo "1. Open Xcode → Window → Organizer"
@@ -99,7 +115,7 @@ submit: _metadata
 	@echo "✅ Typical review time: 24-48 hours"
 
 help:
-	@echo "$(APP_NAME) - App Store Workflow"
+	@echo "\$(APP_NAME) - App Store Workflow"
 	@echo ""
 	@echo "Development:"
 	@echo "  make dev      - Open in Xcode"
@@ -119,13 +135,13 @@ clean:
 _check_icons:
 	@if [ ! -f Assets.xcassets/AppIcon.appiconset/icon-1024.png ]; then \
 		echo "🎨 Generating placeholder app icon..."; \
-		./scripts/generate_icon.sh "$(APP_NAME)" || echo "⚠️  Using default icon"; \
+		./scripts/generate_icon.sh "\$(APP_NAME)" || echo "⚠️  Using default icon"; \
 	fi
 
 _privacy_policy:
 	@if [ ! -f PrivacyPolicy.md ]; then \
 		echo "📄 Creating privacy policy..."; \
-		echo "# Privacy Policy for $(APP_NAME)\n\n$(APP_NAME) does not collect any personal information.\n\nNo data is shared with third parties.\n\nContact: support@example.com" > PrivacyPolicy.md; \
+		echo "# Privacy Policy for \$(APP_NAME)\n\n\$(APP_NAME) does not collect any personal information.\n\nNo data is shared with third parties.\n\nContact: support@example.com" > PrivacyPolicy.md; \
 	fi
 
 _screenshots:
@@ -134,8 +150,8 @@ _screenshots:
 	@echo "Screenshot Requirements:\n\niPhone 6.7\": 1290 × 2796 pixels\niPhone 6.1\": 1179 × 2556 pixels\niPad 13\": 2048 × 2732 pixels\n\nTake screenshots of:\n1. Main screen\n2. Add/Edit screen\n3. Any unique features" > AppStoreAssets/README.txt
 
 _archive:
-	@xcodebuild -scheme $(APP_NAME) -configuration Release archive \
-		-archivePath build/$(APP_NAME).xcarchive \
+	@xcodebuild -scheme \$(APP_NAME) -configuration Release archive \
+		-archivePath build/\$(APP_NAME).xcarchive \
 		-destination 'generic/platform=iOS' \
 		-quiet \
 		CODE_SIGN_IDENTITY="" \
@@ -145,12 +161,12 @@ _archive:
 _metadata:
 	@mkdir -p AppStoreAssets/Metadata
 	@echo "App Store Metadata Template" > AppStoreAssets/Metadata/description.txt
-	@echo "$(APP_NAME) - [Brief tagline]\n\n[2-3 paragraphs describing your app]\n\nFeatures:\n• Feature 1\n• Feature 2\n• Feature 3" >> AppStoreAssets/Metadata/description.txt
+	@echo "\$(APP_NAME) - [Brief tagline]\n\n[2-3 paragraphs describing your app]\n\nFeatures:\n• Feature 1\n• Feature 2\n• Feature 3" >> AppStoreAssets/Metadata/description.txt
 	@echo "\nKeywords (100 chars max):" >> AppStoreAssets/Metadata/description.txt
 	@echo "[keyword1, keyword2, keyword3]" >> AppStoreAssets/Metadata/description.txt
 
 # Variable export for use in targets
-export APP_NAME := $(APP_NAME)
+export APP_NAME := \$(APP_NAME)
 EOF
 
 # Create Info.plist
@@ -179,7 +195,7 @@ name: $APP_NAME
 options:
   bundleIdPrefix: com.appmaker
   deploymentTarget:
-    iOS: "18.0"
+    iOS: "17.0"
 targets:
   $APP_NAME:
     type: application
