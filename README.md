@@ -40,7 +40,7 @@ In 5 seconds, you get:
 ## 🛠 Installation (30 seconds)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yourusername/appmaker/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/joelklabo/appmaker/main/install.sh | bash
 source ~/.zshrc
 ```
 
@@ -156,7 +156,7 @@ A: Add your favorite (Firebase, Supabase, AWS) in minutes. The structure support
 
 ```bash
 # Install (once)
-curl -fsSL https://bit.ly/appmaker-install | bash
+curl -fsSL https://raw.githubusercontent.com/joelklabo/appmaker/main/install.sh | bash
 
 # Create your first app
 appmaker MyFirstApp
@@ -205,7 +205,7 @@ Every generated app includes:
 Stop reading. Start building.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yourusername/appmaker/main/install.sh | bash && source ~/.zshrc && appmaker MyNextBigThing
+curl -fsSL https://raw.githubusercontent.com/joelklabo/appmaker/main/install.sh | bash && source ~/.zshrc && appmaker MyNextBigThing
 ```
 
 ---
@@ -216,9 +216,9 @@ curl -fsSL https://raw.githubusercontent.com/yourusername/appmaker/main/install.
 </p>
 
 <p align="center">
-  <a href="https://github.com/yourusername/appmaker/issues">Report Bug</a>
+  <a href="https://github.com/joelklabo/appmaker/issues">Report Bug</a>
   ·
-  <a href="https://github.com/yourusername/appmaker/issues">Request Feature</a>
+  <a href="https://github.com/joelklabo/appmaker/issues">Request Feature</a>
   ·
-  <a href="https://twitter.com/yourusername">Follow Updates</a>
+  <a href="https://twitter.com/joelklabo">Follow Updates</a>
 </p>

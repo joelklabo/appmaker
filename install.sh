@@ -1,37 +1,26 @@
 #!/bin/bash
 
-# AppMaker Installation Script
+# AppMaker - One Line Installation
 
-set -euo pipefail
+echo "Installing AppMaker..."
 
-INSTALL_DIR="${HOME}/.appmaker"
-BIN_DIR="${HOME}/.local/bin"
+# Create bin directory if needed
+mkdir -p ~/.local/bin
 
-echo "🚀 Installing AppMaker..."
+# Download the appmaker script
+curl -fsSL https://raw.githubusercontent.com/joelklabo/appmaker/main/appmaker-ultimate -o ~/.local/bin/appmaker
+chmod +x ~/.local/bin/appmaker
 
-# Create directories
-mkdir -p "$INSTALL_DIR"
-mkdir -p "$BIN_DIR"
-
-# Copy files
-cp -r . "$INSTALL_DIR/"
-
-# Create symlink
-ln -sf "$INSTALL_DIR/appmaker" "$BIN_DIR/appmaker"
-
-# Make executable
-chmod +x "$BIN_DIR/appmaker"
-
-# Add to PATH if not already there
-if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
-    echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> ~/.zshrc
-    echo "📝 Added $BIN_DIR to PATH in ~/.zshrc"
-    echo "   Run: source ~/.zshrc"
+# Add to PATH if needed
+if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+    echo "Added ~/.local/bin to PATH"
 fi
 
-echo "✅ AppMaker installed successfully!"
+echo "✅ Installation complete!"
 echo ""
-echo "Quick start:"
-echo "  appmaker new MyApp"
-echo "  cd MyApp"
-echo "  make dev"
+echo "Usage: appmaker YourAppName"
+echo ""
+echo "Try it now:"
+echo "  source ~/.zshrc"
+echo "  appmaker MyFirstApp"
